@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.min.css">
+    <title>Дизайнеры</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        /* Секция дизайнеров */
+        .designer {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .designer img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .designer-info {
+            flex: 1;
+        }
+
+        .designer-info h2 {
+            margin: 0;
+            color: #444;
+        }
+
+        .designer-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+	<header class="header__catalog">
+		<div class="container">
+			<nav class="header__nav">
+				<ul class="header__nav_left">
+					
+				</ul>
+				<div class="header">
+					<div class="header__logo">
+						<a href="index.html" target="_blank">
+							<img src="https://i.pinimg.com/236x/a4/4c/a1/a44ca14c1057202cc020c130f45046bb--chanel-black-coco-chanel.jpg" alt="COCO Fine Jewelry">
+						</a>
+					</div>
+				</div>
+				
+				<style>
+				/* Общий контейнер для центрирования */
+				.header {
+					display: flex;
+					justify-content: center; /* Центрирование по горизонтали */
+					align-items: center; /* Центрирование по вертикали (если нужно) */
+					height: 100px; /* Подстройте под ваш дизайн */
+					background-color: #222; /* Для тестирования */
+				}
+				
+				/* Стиль логотипа */
+				.header__logo img {
+					width: 700px; /* Подгоните размер */
+					height: auto;
+					mix-blend-mode: screen; /* Работает на темном фоне */
+				}
+				</style>
+				
+				<div class="header__burger">
+					<span></span>
+				</div>
+			</nav>
+
+        <section class="container">
+            <h1>Наши дизайнеры</h1>
+
+            <div class="designer">
+                <img src="https://avatars.mds.yandex.net/i?id=b0d6ba754498f675bf3e8ba81df1bed5_l-5235567-images-thumbs&n=13" alt="Дизайнер 1">
+                <div class="designer-info">
+                    <h2>Айым Сулейменова</h2>
+                    <p><strong>Опыт:</strong> 8 лет</p>
+                    <p><strong>Специализация:</strong> Ювелирный дизайн, 3D-моделирование</p>
+                    <p><strong>Контакты:</strong> <a href="mailto:ayim@email.com">ayim@email.com</a></p>
+                </div>
+            </div>
+
+            <div class="designer">
+                <img src="https://thumbs.dreamstime.com/b/jeweler-working-luxury-jewelry-workshop-jeweler-working-luxury-jewelry-workshop-114898547.jpg" alt="Дизайнер 2">
+                <div class="designer-info">
+                    <h2>Ерасыл Нурланов</h2>
+                    <p><strong>Опыт:</strong> 10 лет</p>
+                    <p><strong>Специализация:</strong> Эскизы, работа с драгоценными камнями</p>
+                    <p><strong>Контакты:</strong> <a href="mailto:yerasyl@email.com">yerasyl@email.com</a></p>
+                </div>
+            </div>
+
+            <div class="designer">
+                <img src="https://zolotoytelets.ru/upload/iblock/20a/20abb56d707287df0aada9f4a34ff8e3.jpg" alt="Дизайнер 3">
+                <div class="designer-info">
+                    <h2>Мадина Тлеубекова</h2>
+                    <p><strong>Опыт:</strong> 12 лет</p>
+                    <p><strong>Специализация:</strong> Современные тренды, маркетинг в дизайне</p>
+                    <p><strong>Контакты:</strong> <a href="mailto:madina@email.com">madina@email.com</a></p>
+                </div>
+            </div>
+        </section>
+
+      
+    
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="js/main.min.js"></script>
+        <script src="js/script.js"></script>
+    
+    </main>
+    </body>
+    
+    </html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .avatar-container {
+            position: relative;
+            margin-right: 30px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f5e663;
+            cursor: pointer;
+        }
+        
+        .avatar-upload {
+            display: none;
+        }
+        
+        .profile-info h1 {
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .profile-info p {
+            color: #777;
+            margin-bottom: 3px;
+        }
+        
+        .profile-details {
+            margin-bottom: 30px;
+        }
+        
+        .profile-details h2 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 22px;
+            border-bottom: 2px solid #f5e663;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+        
+        .profile-details p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .profile-details strong {
+            color: #555;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+        
+        .edit-btn {
+            background-color: #f5e663;
+            color: #333;
+        }
+        
+        .edit-btn:hover {
+            background-color: #e5d75b;
+        }
+        
+        .logout-btn {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .logout-btn:hover {
+            background-color: #ff5252;
+        }
+        
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .edit-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .edit-form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .edit-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <div class="avatar-container">
+                <img id="avatarImage" src="https://via.placeholder.com/120" alt="Аватар" class="profile-avatar">
+                <input type="file" id="avatarUpload" class="avatar-upload" accept="image/*">
+            </div>
+            <div class="profile-info">
+                <h1 id="profileUsername">Имя пользователя</h1>
+                <p id="profileEmail">user@example.com</p>
+                <p>Зарегистрирован: <span id="joinDate">01.01.2023</span></p>
+            </div>
+        </div>
+        
+        <div class="profile-details">
+            <h2>О себе</h2>
+            <p id="profileBio">Здесь будет информация о вас. Нажмите "Редактировать профиль", чтобы добавить данные.</p>
+            
+            <h2>Контактная информация</h2>
+            <p><strong>Email:</strong> <span id="profileEmailField">user@example.com</span></p>
+            <p><strong>Имя пользователя:</strong> <span id="profileUsernameField">username</span></p>
+        </div>
+        
+        <button class="btn edit-btn" id="editProfileBtn">Редактировать профиль</button>
+        <button class="btn logout-btn" id="logoutBtn">Выйти</button>
+        
+        <div class="edit-form" id="editForm">
+            <h2>Редактирование профиля</h2>
+            <input type="text" id="editUsername" placeholder="Имя пользователя">
+            <input type="email" id="editEmail" placeholder="Email">
+            <textarea id="editBio" placeholder="О себе" style="width:100%; height:100px; padding:10px; margin-bottom:15px;"></textarea>
+            <button id="saveProfileBtn">Сохранить изменения</button>
+        </div>
+    </div>
+
+    <script>
+        // Проверка авторизации
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Загрузка данных пользователя
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            const joinDate = new Date().toLocaleDateString();
+            
+            if (userData) {
+                document.getElementById('profileUsername').textContent = userData.username;
+                document.getElementById('profileEmail').textContent = userData.email;
+                document.getElementById('profileEmailField').textContent = userData.email;
+                document.getElementById('profileUsernameField').textContent = userData.username;
+                document.getElementById('joinDate').textContent = joinDate;
+                
+                // Заполняем форму редактирования
+                document.getElementById('editUsername').value = userData.username;
+                document.getElementById('editEmail').value = userData.email;
+                
+                // Проверяем, есть ли сохранённый аватар
+                if (localStorage.getItem('userAvatar')) {
+                    document.getElementById('avatarImage').src = localStorage.getItem('userAvatar');
+                }
+                
+                // Проверяем, есть ли сохранённое био
+                if (localStorage.getItem('userBio')) {
+                    document.getElementById('profileBio').textContent = localStorage.getItem('userBio');
+                    document.getElementById('editBio').value = localStorage.getItem('userBio');
+                }
+            }
+        });
+
+        // Редактирование профиля
+        document.getElementById('editProfileBtn').addEventListener('click', function() {
+            const editForm = document.getElementById('editForm');
+            if (editForm.style.display === 'block') {
+                editForm.style.display = 'none';
+                this.textContent = 'Редактировать профиль';
+            } else {
+                editForm.style.display = 'block';
+                this.textContent = 'Скрыть форму';
+            }
+        });
+
+        // Сохранение изменений
+        document.getElementById('saveProfileBtn').addEventListener('click', function() {
+            const newUsername = document.getElementById('editUsername').value;
+            const newEmail = document.getElementById('editEmail').value;
+            const newBio = document.getElementById('editBio').value;
+            
+            // Обновляем данные
+            document.getElementById('profileUsername').textContent = newUsername;
+            document.getElementById('profileEmail').textContent = newEmail;
+            document.getElementById('profileEmailField').textContent = newEmail;
+            document.getElementById('profileUsernameField').textContent = newUsername;
+            document.getElementById('profileBio').textContent = newBio;
+            
+            // Сохраняем в localStorage
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            userData.username = newUsername;
+            userData.email = newEmail;
+            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('userBio', newBio);
+            
+            // Скрываем форму
+            document.getElementById('editForm').style.display = 'none';
+            document.getElementById('editProfileBtn').textContent = 'Редактировать профиль';
+            
+            alert('Изменения сохранены!');
+        });
+
+        // Загрузка аватара
+        document.getElementById('avatarImage').addEventListener('click', function() {
+            document.getElementById('avatarUpload').click();
+        });
+
+        document.getElementById('avatarUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const avatarUrl = event.target.result;
+                    document.getElementById('avatarImage').src = avatarUrl;
+                    localStorage.setItem('userAvatar', avatarUrl);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Выход из системы
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

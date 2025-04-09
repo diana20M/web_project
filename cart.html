@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Корзина</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        .cart-total {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: right;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        #checkout-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 5px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        #checkout-btn:hover {
+            background: #45a049;
+        }
+        .remove-btn {
+            background: #ff5252;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 15px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .remove-btn:hover {
+            background: #ff0000;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 40px 0;
+            color: #777;
+            font-size: 18px;
+        }
+        .item-info {
+            display: flex;
+            align-items: center;
+        }
+        .item-quantity {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-shopping-cart"></i> Ваша корзина</h1>
+    <div id="cart-items">
+        <!-- Товары будут подгружаться через JS -->
+    </div>
+    <div class="cart-total" id="cart-total">
+        Итого: 0 тг
+    </div>
+    <button id="checkout-btn">Оформить заказ</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            function renderCart() {
+                cartItems.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItems.innerHTML = '<div class="empty-cart">Ваша корзина пуста</div>';
+                    cartTotal.textContent = 'Итого: 0 тг';
+                    checkoutBtn.style.display = 'none';
+                    return;
+                }
+                
+                let total = 0;
+                
+                cart.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'cart-item';
+                    itemElement.innerHTML = `
+                        <div class="item-info">
+                            <span>${item.name}</span>
+                        </div>
+                        <div>
+                            <span>${item.price} тг × </span>
+                            <span class="item-quantity">${item.quantity}</span>
+                            <button class="remove-btn" data-index="${index}">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                        </div>
+                    `;
+                    cartItems.appendChild(itemElement);
+                    total += item.price * item.quantity;
+                });
+                
+                cartTotal.textContent = `Итого: ${total.toLocaleString()} тг`;
+                
+                // Добавляем обработчики для кнопок удаления
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeItem(index);
+                    });
+                });
+            }
+            
+            function removeItem(index) {
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+                updateCartCounter();
+            }
+            
+            function updateCartCounter() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const counter = document.querySelector('.cart-counter');
+                if (counter) {
+                    counter.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+                }
+            }
+            
+            // Обработчик для кнопки оформления заказа
+            checkoutBtn.addEventListener('click', function() {
+                if (cart.length > 0) {
+                    window.location.href = 'paymentdelivery.html';
+                } else {
+                    alert('Корзина пуста!');
+                }
+            });
+            
+            // Первоначальная загрузка корзины
+            renderCart();
+        });
+        // В cart.html при переходе на страницу оформления
+localStorage.setItem('currentOrder', JSON.stringify({
+    items: cartItems, // ваш массив товаров
+    // другие данные если нужно
+}));
+window.location.href = 'payment.html';
+    </script>
+    <script src="js/script.js"></script>
+</body>
+</html>

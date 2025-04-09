@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #f5d34f;
+            margin-top: 30px;
+            border-bottom: 2px solid #f2f2f2;
+            padding-bottom: 10px;
+        }
+        
+        .order-summary {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-total {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 15px;
+            text-align: right;
+        }
+        
+        .payment-methods, .delivery-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .method, .option {
+            flex-basis: 48%;
+            background: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .method h3, .option h3 {
+            color: #e74c3c;
+            margin-top: 0;
+        }
+        
+        .icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #f4e459;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .card-details {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .submit-btn {
+            background: #fcd436;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            background: #e6bf32;
+        }
+        
+        .thank-you {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .method, .option {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Оформление заказа</h1>
+        
+        <!-- Секция с товарами -->
+        <div class="order-summary">
+            <h2>Ваш заказ</h2>
+            <div id="order-items">
+                <!-- Товары будут подгружаться через JS -->
+            </div>
+            <div class="order-total">
+                Итого: <span id="order-total-price">0</span> тг
+            </div>
+        </div>
+        
+        <!-- Форма оформления заказа -->
+        <form id="order-form">
+            <h2><i class="fas fa-user icon"></i>Контактные данные</h2>
+            
+            <div class="form-group">
+                <label for="name">ФИО*</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Телефон*</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email">
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Адрес доставки*</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+            
+            <h2><i class="fas fa-credit-card icon"></i>Способ оплаты</h2>
+            
+            <div class="form-group">
+                <select id="payment-method" name="payment-method" required>
+                    <option value="">Выберите способ оплаты</option>
+                    <option value="cash">Наличными при получении</option>
+                    <option value="card">Банковской картой онлайн</option>
+                    <option value="transfer">Безналичный расчет</option>
+                </select>
+            </div>
+            
+            <!-- Блок с деталями карты -->
+            <div id="card-details" class="card-details">
+                <div class="form-group">
+                    <label for="card-number">Номер карты*</label>
+                    <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456">
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-expiry">Срок действия*</label>
+                    <input type="text" id="card-expiry" name="card-expiry" placeholder="MM/YY">
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-cvv">CVV/CVC*</label>
+                    <input type="text" id="card-cvv" name="card-cvv" placeholder="123">
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Оформить заказ</button>
+        </form>
+        
+        <!-- Сообщение после оформления -->
+        <div id="thank-you" class="thank-you">
+            <h2><i class="fas fa-check-circle" style="color: #4CAF50;"></i> Спасибо за ваш заказ!</h2>
+            <p>Ваш заказ успешно оформлен. Номер вашего заказа: <strong id="order-number"></strong></p>
+            <p>Мы свяжемся с вами в ближайшее время для подтверждения заказа.</p>
+            <a href="index.html" style="display: inline-block; background: #fcd436; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 20px;">
+                <i class="fas fa-home"></i> Вернуться на главную
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загружаем данные корзины из localStorage
+            const order = JSON.parse(localStorage.getItem('currentOrder'));
+            const orderItems = document.getElementById('order-items');
+            const totalPrice = document.getElementById('order-total-price');
+            
+            if (order && order.items && order.items.length > 0) {
+                let total = 0;
+                orderItems.innerHTML = '';
+                
+                order.items.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'order-item';
+                    itemElement.innerHTML = `
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">${item.price} тг × ${item.quantity} = ${item.price * item.quantity} тг</div>
+                    `;
+                    orderItems.appendChild(itemElement);
+                    total += item.price * item.quantity;
+                });
+                
+                totalPrice.textContent = total;
+            } else {
+                orderItems.innerHTML = '<p>Ваша корзина пуста</p>';
+                // Можно перенаправить на страницу корзины
+                // window.location.href = 'cart.html';
+            }
+            
+            // Показываем/скрываем поля для карты
+            const paymentMethod = document.getElementById('payment-method');
+            const cardDetails = document.getElementById('card-details');
+            
+            paymentMethod.addEventListener('change', function() {
+                if (this.value === 'card') {
+                    cardDetails.style.display = 'block';
+                } else {
+                    cardDetails.style.display = 'none';
+                }
+            });
+            
+            // Обработка формы
+            const orderForm = document.getElementById('order-form');
+            const thankYou = document.getElementById('thank-you');
+            
+            orderForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Проверяем, есть ли товары в заказе
+                if (!order || !order.items || order.items.length === 0) {
+                    alert('Ваша корзина пуста!');
+                    return;
+                }
+                
+                // Собираем данные формы
+                const formData = {
+                    customer: {
+                        name: document.getElementById('name').value,
+                        phone: document.getElementById('phone').value,
+                        email: document.getElementById('email').value,
+                        address: document.getElementById('address').value
+                    },
+                    payment: {
+                        method: paymentMethod.value,
+                        cardDetails: paymentMethod.value === 'card' ? {
+                            number: document.getElementById('card-number').value,
+                            expiry: document.getElementById('card-expiry').value,
+                            cvv: document.getElementById('card-cvv').value
+                        } : null
+                    },
+                    items: order.items,
+                    total: parseInt(totalPrice.textContent),
+                    date: new Date().toISOString()
+                };
+                
+                // Сохраняем заказ
+                const orders = JSON.parse(localStorage.getItem('orders')) || [];
+                const orderNumber = orders.length + 1;
+                formData.orderNumber = orderNumber;
+                orders.push(formData);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // Очищаем корзину
+                localStorage.removeItem('currentOrder');
+                
+                // Показываем сообщение об успешном оформлении
+                orderForm.style.display = 'none';
+                document.getElementById('order-number').textContent = '#' + orderNumber;
+                thankYou.style.display = 'block';
+                
+                // Прокручиваем к сообщению
+                thankYou.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+    	<script src="js/script.js"></script>
+
+</body>
+</html>

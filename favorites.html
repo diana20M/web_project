@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Избранное</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        /* Стили для избранного */
+        .favorites__list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .favorite-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .favorite-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .favorite-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .favorite-item h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+        }
+
+        .favorite-item .price {
+            font-weight: bold;
+            color: #e91e63;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .favorite-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .btn-cart, .remove-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-cart {
+            background: #ff9800;
+            color: white;
+            flex-grow: 1;
+            margin-right: 8px;
+        }
+
+        .btn-cart:hover {
+            background: #e68a00;
+        }
+
+        .remove-btn {
+            background: #f44336;
+            color: white;
+            width: 40px;
+        }
+
+        .remove-btn:hover {
+            background: #d32f2f;
+        }
+
+        .empty-favorites {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 18px;
+            color: #777;
+            grid-column: 1 / -1;
+        }
+
+        /* Шапка */
+        .header__logo img {
+            max-height: 80px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <header class="header__catalog">
+        <div class="container">
+            <nav class="header__nav">
+                <ul class="header__nav_left"></ul>
+              <div class="header">
+					
+						<a href="index.html" target="_blank">
+							
+						</a>
+					</div>
+				</div>
+				
+				<style>
+				/* Общий контейнер для центрирования */
+				.header {
+					display: flex;
+					justify-content: center; /* Центрирование по горизонтали */
+					align-items: center; /* Центрирование по вертикали (если нужно) */
+					height: 100px; /* Подстройте под ваш дизайн */
+					background-color: #222; /* Для тестирования */
+				}
+				
+				/* Стиль логотипа */
+				.header__logo img {
+					width: 700px; /* Подгоните размер */
+					height: auto;
+					mix-blend-mode: screen; /* Работает на темном фоне */
+				}
+				</style>
+				
+                
+                <div class="header__burger">
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="favorites">
+            <h1><i class="fas fa-heart"></i> Ваши избранные товары</h1>
+            <div class="favorites__list" id="favoritesList">
+                <!-- Товары будут загружаться через JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer__bottom">
+        <!-- Ваш существующий футер -->
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загружаем избранные товары
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            const favoritesList = document.getElementById('favoritesList');
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = `
+                    <div class="empty-favorites">
+                        <i class="far fa-heart" style="font-size: 50px; margin-bottom: 20px;"></i>
+                        <p>Ваш список избранного пуст</p>
+                        <a href="catalog.html" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #f5d34f; color: white; text-decoration: none; border-radius: 5px;">Перейти в каталог</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Загружаем данные всех товаров (это должен быть ваш реальный каталог)
+            const allProducts = [
+                { id: 'product1', name: 'Часы Graff', price: 550500, image: 'https://example.com/product1.jpg', category: 'Мужские' }, 
+                // Добавьте остальные товары
+            ];
+            
+            // Отображаем избранные товары
+            favorites.forEach(fav => {
+                const product = allProducts.find(p => p.id === fav.id);
+                if (product) {
+                    const item = document.createElement('div');
+                    item.className = 'favorite-item';
+                    item.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="category">${product.category}</div>
+                        <h3>${product.name}</h3>
+                        <div class="price">${product.price.toLocaleString()} тг</div>
+                        <div class="favorite-actions">
+                            <button class="btn-cart" data-id="${product.id}">В корзину</button>
+                            <button class="remove-btn" data-id="${product.id}"><i class="fas fa-times"></i></button>
+                        </div>
+                    `;
+                    favoritesList.appendChild(item);
+                }
+            });
+            
+            // Обработчики для кнопок
+            favoritesList.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-btn')) {
+                    const id = e.target.closest('.remove-btn').getAttribute('data-id');
+                    removeFromFavorites(id);
+                }
+                
+                if (e.target.closest('.btn-cart')) {
+                    const id = e.target.closest('.btn-cart').getAttribute('data-id');
+                    const product = allProducts.find(p => p.id === id);
+                    if (product) {
+                        addToCart(product.name, product.price, product.id);
+                        alert(`${product.name} добавлен в корзину!`);
+                    }
+                }
+            });
+        });
+        
+        function removeFromFavorites(id) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            favorites = favorites.filter(item => item.id !== id);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            location.reload(); // Перезагружаем страницу для обновления списка
+        }
+        
+        function addToCart(name, price, id) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+    </script>
+    	<script src="js/script.js"></script>
+</body>
+</html>

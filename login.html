@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход / Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 80%;
+            max-width: 900px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            width: 40%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #f5e663;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .form-container button:hover {
+            background-color: #e5d75b;
+        }
+
+        .form-container .link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .form-container .link a {
+            color: #6b6f72;
+            text-decoration: none;
+        }
+
+        .form-container .link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Форма входа -->
+    <div class="form-container" id="login-form">
+        <h2>Вход</h2>
+        <form id="loginForm">
+            <input type="email" name="email" placeholder="Электронная почта" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <div id="login-error" class="error-message" style="display: none;"></div>
+            <button type="submit">Войти</button>
+        </form>
+        <div class="link">
+            Нет аккаунта? <a href="javascript:void(0);" onclick="showRegisterForm()">Зарегистрироваться</a>
+        </div>
+    </div>
+
+    <!-- Форма регистрации -->
+    <div class="form-container" id="register-form" style="display: none;">
+        <h2>Регистрация</h2>
+        <form id="registerForm">
+            <input type="text" name="username" placeholder="Имя пользователя" required>
+            <input type="email" name="email" placeholder="Электронная почта" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <input type="password" name="confirm-password" placeholder="Подтвердите пароль" required>
+            <div id="register-error" class="error-message" style="display: none;"></div>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <div class="link">
+            Уже есть аккаунт? <a href="javascript:void(0);" onclick="showLoginForm()">Войти</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Переключение между формами
+    function showLoginForm() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('register-form').style.display = 'none';
+        clearErrors();
+    }
+
+    function showRegisterForm() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+        clearErrors();
+    }
+
+    function clearErrors() {
+        document.getElementById('login-error').style.display = 'none';
+        document.getElementById('register-error').style.display = 'none';
+    }
+
+    // Обработка регистрации
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirm-password');
+        
+        // Валидация паролей
+        if (password !== confirmPassword) {
+            document.getElementById('register-error').textContent = 'Пароли не совпадают!';
+            document.getElementById('register-error').style.display = 'block';
+            return;
+        }
+        
+        if (password.length < 6) {
+            document.getElementById('register-error').textContent = 'Пароль должен содержать минимум 6 символов!';
+            document.getElementById('register-error').style.display = 'block';
+            return;
+        }
+        
+        // Сохраняем данные пользователя
+        const userData = {
+            username: formData.get('username'),
+            email: formData.get('email'),
+            password: password // В реальном проекте пароль НЕЛЬЗЯ хранить в localStorage!
+        };
+        
+        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Перенаправляем на профиль
+        window.location.href = 'profile.html';
+    });
+
+    // Обработка входа
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const storedData = JSON.parse(localStorage.getItem('userData'));
+        
+        // Проверка учетных данных
+        if (!storedData || 
+            formData.get('email') !== storedData.email || 
+            formData.get('password') !== storedData.password) {
+            
+            document.getElementById('login-error').textContent = 'Неверный email или пароль!';
+            document.getElementById('login-error').style.display = 'block';
+            return;
+        }
+        
+        localStorage.setItem('isLoggedIn', 'true');
+        window.location.href = 'profile.html';
+    });
+
+    // Если пользователь уже авторизован, перенаправляем на профиль
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        window.location.href = 'profile.html';
+    }
+</script>
+
+</body>
+</html>
